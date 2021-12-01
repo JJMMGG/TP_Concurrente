@@ -30,15 +30,19 @@ public class RDP {
     //1 x m
     private Matriz VectorMarcadoInicial;
     private Matriz VectorMarcadoActual;
-    private Matriz VectorMarcadoNuevo;
+    private Matriz VectorMarcadoViejo;
     //1 x n
     private Matriz VectorExtendido;
     private Matriz VectorSensibilizado;
     private Matriz VectorInhibicion;
 
     //EXTRAEXTRA
-    
+    private Matriz InhibicionLector;
+    private Matriz VectorLector;
+    private Matriz VectorSensibilizadoViejo;
+
     private SensibilizadasConTiempo gestionarTiempo;
+    private Scanner input;
     /**
      * Constructor de la clase Red de Petri
      */
@@ -55,8 +59,9 @@ public class RDP {
         //Vectores
         VectorMarcadoInicial = new Matriz(1,numeroPlazas);
         VectorMarcadoActual = new Matriz(1,numeroPlazas);
-        VectorMarcadoNuevo = new Matriz(1,numeroPlazas);
+        VectorMarcadoViejo = new Matriz(1,numeroPlazas);
         VectorSensibilizado = new Matriz(1,numeroTransiciones);
+        VectorSensibilizadoViejo = new Matriz(1,numeroTransiciones);
         VectorInhibicion = new Matriz(1,numeroTransiciones);
         VectorExtendido = new Matriz(1,numeroTransiciones);
 
@@ -67,7 +72,10 @@ public class RDP {
         Identidad.cargarIdentidad();
         VectorMarcadoInicial.cargarMatriz(pathVectorMarcadoInicial);
         VectorMarcadoActual.cargarMatriz(pathVectorMarcadoInicial);
-
+        //EXTRA
+        InhibicionLector = new Matriz(numeroPlazas, numeroTransiciones);
+        VectorLector = new Matriz(1,numeroTransiciones);
+        InhibicionLector.cargarMatriz(pathMatrizLector);
         //sensibilizar();
     }
     /**
@@ -115,6 +123,94 @@ public class RDP {
 
         return Plazas;
     }
+    ///////////////////////////////ELIMINAR
+    public void printInfo(){
+        System.out.println(numeroTransiciones);
+        System.out.println(numeroPlazas);
+        /*System.out.println("Matriz IEntrada");
+        for(int i=0; i<numeroPlazas;i++){
+            for(int j=0;j<numeroTransiciones;j++){
+                System.out.print(IEntrada.getDato(i,j));
+            }
+            System.out.print("\n");
+        }*/
+        /*System.out.println("Matriz ISalida");
+        for(int i=0; i<numeroPlazas;i++){
+            for(int j=0;j<numeroTransiciones;j++){
+                System.out.print(ISalida.getDato(i,j));
+            }
+            System.out.print("\n");
+        }*/
+        /*System.out.println("Matriz Incidencia");
+        for(int i=0; i<numeroPlazas;i++){
+            for(int j=0;j<numeroTransiciones;j++){
+                System.out.print(Incidencia.getDato(i,j));
+            }
+            System.out.print("\n");
+        }*/
+        /*System.out.println("Matriz Inhibicion");
+        for(int i=0; i<numeroPlazas;i++){
+            for(int j=0;j<numeroTransiciones;j++){
+                System.out.print(Inhibicion.getDato(i,j));
+            }
+            System.out.print("\n");
+        }*/
+        /*System.out.println("Matriz Identidad");
+        for(int i=0; i<numeroTransiciones;i++){
+            for(int j=0;j<numeroTransiciones;j++){
+                System.out.print(Identidad.getDato(i,j));
+            }
+            System.out.print("\n");
+        }*/
+        /*System.out.println("Matriz Inhibicion Lector");
+        for(int i=0; i<numeroPlazas;i++){
+            for(int j=0;j<numeroTransiciones;j++){
+                System.out.print(InhibicionLector.getDato(i,j));
+            }
+            System.out.print("\n");
+        }*/
+        /*System.out.println("Vector Marcado Inicial");
+        for(int i=0; i<numeroPlazas;i++){
+            System.out.print(VectorMarcadoInicial.getDato(0,i));
+        }*/
+        /*System.out.println("Vector Marcado Actual");
+        for(int i=0; i<numeroPlazas;i++){
+            System.out.print(VectorMarcadoActual.getDato(0,i));
+        }
+        System.out.println();
+        System.out.println("Vector Marcado Nuevo");
+        for(int i=0; i<numeroPlazas;i++){
+            System.out.print(VectorMarcadoViejo.getDato(0,i));
+        }*/
+        /*System.out.println("Vector Sensibilizado");
+        for(int i=0; i<numeroTransiciones;i++){
+                System.out.print(VectorSensibilizado.getDato(0,i));
+        }*/
+        /*System.out.println("Vector Sensibilizado Viejo");
+        for(int i=0; i<numeroTransiciones;i++){
+            System.out.print(VectorSensibilizadoViejo.getDato(0,i));
+        }*/
+        System.out.println("Vector Sensibilizado");
+        for(int i=0; i<numeroTransiciones;i++){
+            System.out.print(VectorSensibilizado.getDato(0,i));
+        }
+        System.out.println();
+        System.out.println("Vector Inhibicion");
+        for(int i=0; i<numeroTransiciones;i++){
+            System.out.print(VectorInhibicion.getDato(0,i));
+        }
+        System.out.println();
+        System.out.println("Vector Lector");
+        for(int i=0; i<numeroTransiciones;i++){
+            System.out.print(VectorLector.getDato(0,i));
+        }
+        System.out.println();
+        System.out.println("Vector Extendido");
+        for(int i=0; i<numeroTransiciones;i++){
+            System.out.print(VectorExtendido.getDato(0,i));
+        }
+        System.out.println();
+    }
     /**
      * Este metodo verifica si la transicion esta sensibilizada en el vector
      * extendido (VE)
@@ -147,11 +243,11 @@ public class RDP {
      * Metodo que sensibiliza las transiciones y carga el vector extendido
      */
     public void sensibilizar() {
-        sensibilizarVectorB();
         sensibilizarVectorE();
+        sensibilizarVectorB();
         sensibilizarVectorL();
         //Ex = E and B and L and V and G and Z cambiar aca si algo se agrega
-        VectorExtendido = VectorSensibilizado.getAnd(VectorInhibicion);
+        VectorExtendido = VectorSensibilizado.getAnd(VectorInhibicion).getAnd(VectorLector);
     }
     /**
      * Metodo que calcula el vector Inhibicion
@@ -172,23 +268,32 @@ public class RDP {
         }//[1xn]=[1xnumeroDePlazas] si hacemos una transposicion => nx1
         //H [nxm]=[numeroDePlazasxnumeroDeTransiciones], si o si hay que transponer =>mxn
         Matriz H = Inhibicion.getTranspuesta();
-        Matriz B = H.getMultiplicacion(Q.getTranspuesta());
-        VectorInhibicion = B.getComplemento().getTranspuesta();
+        Matriz B = H.getMultiplicacion(Q.getTranspuesta());//mx1
+        VectorInhibicion = B.getComplemento().getTranspuesta();//1xm
     }
     /**
      * Metodo que calcula el vector Lector
      */
     public void sensibilizarVectorL() {
-        Matriz W = new Matriz(1,VectorMarcadoActual.getNumColumnas());//1xn
+        //vector W donde cada elemento es uno si la marca de la plaza es
+        //distinta de cero, cero en otro caso
+        Matriz W = new Matriz(1,VectorMarcadoActual.getNumColumnas());//1xn 1xP
         for(int i =0 ; i<VectorMarcadoActual.getNumColumnas(); i++) {
             if(VectorMarcadoActual.getDato(0, i) > 0) {
                 W.setDato(0, i, 1);
             }
             else W.setDato(0, i, 0);
         }
-        Matriz R = InhibicionLector.getTranspuesta();//m x n =>n x m
+        Matriz R = InhibicionLector.getTranspuesta();//PxT n x m =>m x n
+        for(int i=0; i<R.getNumFilas();i++){
+            for(int j=0; j<R.getNumColumnas();j++){
+                System.out.print(R.getDato(i,j));
+            }
+            System.out.println();
+        }
         Matriz Auxiliar = InhibicionLector;
-        Matriz VectorTNL = new Matriz(1,InhibicionLector.getNumColumnas()); //Vector de transiciones que no tienen un arco lector
+        //Vector de transiciones que no tienen un arco lector
+        Matriz VectorTNL = new Matriz(1,InhibicionLector.getNumColumnas());
         //Genero un vector con las transiciones que no tiene arco lector
         int flag =0;
         for(int s =0 ; s<InhibicionLector.getNumColumnas() ; s++) {
@@ -201,7 +306,7 @@ public class RDP {
             }
             else VectorTNL.setDato(0, s, 0);
         }
-        Matriz L = R.getMultiplicacion(W.getTranspuesta()); // L = R X W
+        Matriz L = R.getMultiplicacion(W.getTranspuesta());//m x n . n x 1 = m x 1
         L = L.getTranspuesta();
         for(int co =0 ; co<InhibicionLector.getNumColumnas() ; co++) {
             L.setDato(0, co, ( L.getDato(0, co)+VectorTNL.getDato(0, co)));
@@ -224,8 +329,7 @@ public class RDP {
     }
     /**
      * Este metodo dispara una transicion de la rdp indicada por parametro, teniendo en cuenta el modo indicado por parametro
-     *@param n_T : numero de transicion.
-     *@param flag indica el modo de disparo:
+     *@param transicion : numero de transicion.
      *			 -true : modo de disparo explicito, modifica el vector de marcado actual VMA
      *           -false : modo de disparo implicito, no modifica el vector de marcado actual VMA
      *@return : -0 retorna 0 si el disparo no es exitoso.
