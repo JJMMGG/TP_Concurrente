@@ -25,6 +25,7 @@ public class RDP {
     private Matriz ISalida;
     private Matriz Incidencia;
     private Matriz Inhibicion;
+    private Matriz InhibicionLector;
     //n x n
     private Matriz Identidad;
     //1 x m
@@ -35,10 +36,9 @@ public class RDP {
     private Matriz VectorExtendido;
     private Matriz VectorSensibilizado;
     private Matriz VectorInhibicion;
+    private Matriz VectorLector;
 
     //EXTRAEXTRA
-    private Matriz InhibicionLector;
-    private Matriz VectorLector;
     private Matriz VectorSensibilizadoViejo;
 
     private SensibilizadasConTiempo gestionarTiempo;
@@ -55,6 +55,7 @@ public class RDP {
         ISalida = new Matriz(numeroPlazas,numeroTransiciones);
         Incidencia = new Matriz(numeroPlazas,numeroTransiciones);
         Inhibicion = new Matriz(numeroPlazas,numeroTransiciones);
+        InhibicionLector = new Matriz(numeroPlazas, numeroTransiciones);
         Identidad = new Matriz(numeroTransiciones,numeroTransiciones);
         //Vectores
         VectorMarcadoInicial = new Matriz(1,numeroPlazas);
@@ -64,18 +65,18 @@ public class RDP {
         VectorSensibilizadoViejo = new Matriz(1,numeroTransiciones);
         VectorInhibicion = new Matriz(1,numeroTransiciones);
         VectorExtendido = new Matriz(1,numeroTransiciones);
+        VectorLector = new Matriz(1,numeroTransiciones);
 
         Incidencia.cargarMatriz(pathMatrizIncidencia);
         IEntrada.cargarMatriz(pathMatrizPre);
         ISalida.cargarMatriz(pathMatrizPost);
         Inhibicion.cargarMatriz(pathMatrizInhibicion);
+        InhibicionLector.cargarMatriz(pathMatrizLector);
         Identidad.cargarIdentidad();
         VectorMarcadoInicial.cargarMatriz(pathVectorMarcadoInicial);
         VectorMarcadoActual.cargarMatriz(pathVectorMarcadoInicial);
         //EXTRA
-        InhibicionLector = new Matriz(numeroPlazas, numeroTransiciones);
-        VectorLector = new Matriz(1,numeroTransiciones);
-        InhibicionLector.cargarMatriz(pathMatrizLector);
+        gestionarTiempo = new SensibilizadasConTiempo(numeroTransiciones);
         //sensibilizar();
     }
     /**
