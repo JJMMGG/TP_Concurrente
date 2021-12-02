@@ -31,7 +31,4 @@ public class Hilos implements Runnable{
             }
         }
     }
-    public String getNombre() {
-        return nombre;
-    }
 }
