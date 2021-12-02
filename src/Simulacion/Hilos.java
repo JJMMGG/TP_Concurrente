@@ -25,7 +25,7 @@ public class Hilos implements Runnable{
             for(int i=0; i<secuencia.length; i++) {
                 try {
                     monitor.dispararTransicion(secuencia[i]);
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
