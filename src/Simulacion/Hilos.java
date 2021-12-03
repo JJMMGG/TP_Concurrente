@@ -18,7 +18,7 @@ public class Hilos implements Runnable{
         this.secuencia = secuencia;
     }
     /**
-     * Metodod run
+     * Metodo run que se ejecuta al usar start
      */
     public void run() {
         while(true) {
