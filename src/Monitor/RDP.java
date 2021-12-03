@@ -286,12 +286,6 @@ public class RDP {
             else W.setDato(0, i, 0);
         }
         Matriz R = InhibicionLector.getTranspuesta();//PxT n x m =>m x n
-        for(int i=0; i<R.getNumFilas();i++){
-            for(int j=0; j<R.getNumColumnas();j++){
-                System.out.print(R.getDato(i,j));
-            }
-            System.out.println();
-        }
         Matriz Auxiliar = InhibicionLector;
         //Vector de transiciones que no tienen un arco lector
         Matriz VectorTNL = new Matriz(1,InhibicionLector.getNumColumnas());

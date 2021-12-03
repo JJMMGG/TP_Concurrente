@@ -18,7 +18,7 @@ public class Monitor {
         politica.quitarPrioridad(red.getMatrizInhibicion());
         red.sensibilizar();
         cola = new Cola(red.getSensibilizadas().getNumColumnas());
-        mutex = new Semaphore(1,true);							//el semaforo que se utilizara, solo uno puede entrar y es justo.
+        mutex = new Semaphore(1,true);				//el semaforo que se utilizara, solo uno puede entrar y es justo.
     }
     /**
      * Este metodo dispara una transicion de la rdp indicada por parametro, teniendo en cuenta el modo indicado por parametro
