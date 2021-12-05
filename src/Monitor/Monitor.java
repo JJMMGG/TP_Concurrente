@@ -1,5 +1,6 @@
 package Monitor;
 
+import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
 public class Monitor {
@@ -29,7 +30,7 @@ public class Monitor {
      *@return : -0 retorna 0 si el disparo no es exitoso.
      *          -1 retorna 1 si el disparo no es exitoso.
      */
-    public void dispararTransicion(int n_transicion) throws InterruptedException
+    public void dispararTransicion(int n_transicion) throws InterruptedException, IOException
     {
         mutex.acquire();
         System.out.println("En este momento la cola al monitor tiene " +mutex.getQueueLength() +" hilos esperando");
@@ -40,9 +41,9 @@ public class Monitor {
         while(k == true) {
             red.imprimirVectorMarcado();
             System.out.println("Disparo: Transicion"+ n_transicion);
-            //saveInFile();
             k=red.Disparar(n_transicion);//, modo_de_disparo);
             if(k==true){
+                saveInFile(n_transicion);
                 m=calcularVsAndVc();
                 if(m==0){
                     k = false;
@@ -70,20 +71,27 @@ public class Monitor {
     public int calcularVsAndVc(){
         Matriz Vs = red.getSensibilizadas();
         Matriz Vc = cola.quienesEstan();
-        /**/
-        /*System.out.println("Vector Extendido");
-        Vs.imprimirMatriz();
-        System.out.println("Vector Cola");
-        Vc.imprimirMatriz();
-        /**/
         and = Vs.getAnd(Vc);//m
         if(and.esNula()) {
             return 0;
         }
         return 1;
     }
-    /*public void saveInFile(){
-        red.
-        archivo.EscribirEnArchivo();
-    }*/
+
+    /**
+     * Metodo que guarda la informacion en el archivo
+     * @param transicion transicion que va a ser disparada
+     */
+    public void saveInFile(int transicion) throws IOException {
+        Matriz Marcado=red.getVectorMarcadoActual();
+        String infoMarcado="vector marcado actual : ";
+        infoMarcado += Marcado.getDatosConFormato();
+        archivo.EscribirEnArchivo(infoMarcado);
+        Matriz Extendido = red.getSensibilizadas();
+        String infoExtendido = "vector extendido : ";
+        infoExtendido += Extendido.getDatosConFormato();
+        archivo.EscribirEnArchivo(infoExtendido);
+        String infoTransicion = "transicion : "+transicion+"\n";
+        archivo.EscribirEnArchivo(infoTransicion);
+    }
 }
