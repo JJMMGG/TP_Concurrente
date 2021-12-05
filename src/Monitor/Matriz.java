@@ -30,14 +30,14 @@ public class Matriz {
         columnas = matriz[0].length;
     }
     /**
-     * Devuelve la cantidad de filas que tiene la matriz
+     * Metodo que devuelve la cantidad de filas que tiene la matriz
      * @return filas numero de filas
      */
     public int getNumFilas() {
         return filas;
     }
     /**
-     * Devuelve la cantidad de columnas que tiene la matriz
+     * Metodo que devuelve la cantidad de columnas que tiene la matriz
      * @return columnas numero de columnas
      */
     public int getNumColumnas(){
@@ -80,18 +80,18 @@ public class Matriz {
      * Metodo para imprimir los datos contenidos en la matriz
      */
     public void imprimirMatriz() {
-        System.out.println("Datos:");
         for(int i=0; i<filas; i++){
             for(int j=0; j<columnas; j++) {
                 System.out.print(this.getDato(i, j) + "  ");
             }
             System.out.println();
         }
-        System.out.println("############################");
+        System.out.println("################################################################################");
     }
     /**
-     *
-     * @param archivo
+     * Metodo que carga los datos a partir de un archivo especificado a traves
+     * del parametro
+     * @param archivo nombre del archivo a abrir
      */
     public void cargarMatriz(String archivo){
         int fila=0;
