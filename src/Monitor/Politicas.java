@@ -5,11 +5,12 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Politicas {
     //Campos
-    private static final int Plaza1=9;//P10
+    private static final int Plaza1=8;//P9
     private static final int Transicion1 = 7;//T8
-    private static final int Plaza2=24;//P25
-    private static final int Transicion2 = 13;//T14
+    private static final int Plaza2=16;//P17
+    private static final int Transicion2 = 14;//T15
     private int politica;
+    static final int opcionIndiferente = 0;
     static final int opcionLLenadoPlantaBaja = 1;
     static final int opcionSalidaCalleDos = 2;
     public Politicas(int politica){
@@ -29,7 +30,8 @@ public class Politicas {
             aleatorio=ThreadLocalRandom.current().nextInt(maximo);
             siguiente=m.getDato(0, aleatorio);
         }
-        return siguiente;
+        System.out.println("El hilo a despertar es: "+aleatorio);
+        return aleatorio;
     }
     /**
      * Metodo que modifica la red para remover las prioridades
@@ -38,6 +40,10 @@ public class Politicas {
      */
     public void quitarPrioridad(Matriz inhibicion) {
         switch(politica) {
+            case opcionIndiferente:
+                inhibicion.setDato(Plaza1, Transicion1, 0);
+                inhibicion.setDato(Plaza2, Transicion2, 0);
+                break;
             case opcionLLenadoPlantaBaja:
                 inhibicion.setDato(Plaza1, Transicion1, 0);
                 break;
