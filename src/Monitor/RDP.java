@@ -11,7 +11,6 @@ public class RDP {
     static final String pathMatrizPost="./init_files/M_Post.txt";
     static final String pathMatrizInhibicion="./init_files/M_B.txt";
     static final String pathVectorMarcadoInicial="./init_files/V_MI.txt";
-    static final String pathMatrizTiempos="./init_files/M_Time.txt";
     static final String pathMatrizLector="./init_files/M_L.txt";
 
     //private int [] VE  = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; // Indica el numero de transciones sensibilizadas
@@ -21,8 +20,8 @@ public class RDP {
     private final int numeroTransiciones; //almacena el numero de transiciones "n".
     private final int numeroPlazas;       //almacena el numero de plazas "m".
     //m x n
-    private Matriz IEntrada;
-    private Matriz ISalida;
+    private Matriz IEntrada;//I-:pre
+    private Matriz ISalida;//I+:post
     private Matriz Incidencia;
     private Matriz Inhibicion;
     private Matriz InhibicionLector;
@@ -367,6 +366,11 @@ public class RDP {
             return false;
         }
     }
+    /***/
+    public void imprimirVectorMarcado() {
+        System.out.println("Vector de Marcado Actual");
+        VectorMarcadoActual.imprimirMatriz();
+    }
     /**
      * Este metodo muestra el vector indicado por parametro
      * @param vector vector a imprimir.
@@ -381,5 +385,8 @@ public class RDP {
 
             for(int n=0 ; n<vector.length ; n++) System.out.print(Place [n] +":" + vector[n] +" ");
         }
+    }
+    public Matriz getVectorMarcadoActual(){
+        return VectorMarcadoActual;
     }
 }
