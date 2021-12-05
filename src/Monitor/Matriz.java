@@ -113,7 +113,7 @@ public class Matriz {
     /**
      * Metodo que realiza la operacion and entre la matriz que llama
      * el metodo y la que se pasa por parametro
-     * @param Matriz
+     * @param B
      * @return
      */
     public Matriz getAnd(Matriz B){
@@ -201,7 +201,7 @@ public class Matriz {
     }
     /**
      * Metodo que devuelve la columna correspondiente a la tansicion
-     * @param transicion
+     * @param columna
      * @return columna de la matriz transpuesta
      */
     public Matriz getColumna(int columna) {
@@ -226,5 +226,25 @@ public class Matriz {
             }
         }
         return suma;
+    }
+    /**
+     * Metodo que devuelve una cadena con la informacion de la matriz en
+     * formato  [X00,...,x0m]
+     *          [Xm0,...,xmn]
+     */
+    public String getDatosConFormato(){
+        String data="";
+        for(int i=0; i<this.getNumFilas(); i++){
+            for(int j=0; j<this.getNumColumnas(); j++){
+                if(j==0)
+                    data +="["+this.getDato(i,j)+", ";
+                else if(j== this.getNumColumnas()-1)
+                    data += this.getDato(i,j)+"]";
+                else
+                    data += this.getDato(i,j)+", ";
+            }
+            data+="\n";
+        }
+        return data;
     }
 }
