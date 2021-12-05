@@ -2,43 +2,48 @@ package Simulacion;
 
 import Monitor.Monitor;
 import Monitor.RDP;
+import Monitor.AdministradorArchivo;
 import Monitor.Politicas;
 import java.util.Scanner;
 import java.io.IOException;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Main {
-    private static final int numeroHilos = 15;
-    private static final int tiempoCorrida = 60000;//en milisegundos
+    //private static final int numeroHilos = 15;
+    private static final int numeroHilos = 17;
+    private static final int tiempoCorrida = 60000;//en milisegundos DEF=60000
+    private static final String archivo="./run.log";
     private static Scanner input;
     /*private static Escribir_txt Transiciones;
     private static Escribir_txt Plazas;
     private static Escribir_txt Estadisticas;*/
-    private static String Nombres[] = { "Entrada 1",       //T0
-                                        "Entrada 2",       //T1
-                                        "Entrada 3",       //T2
-                                        "Barrera 1",       //T3
-                                        "Barrera 2",       //T5
-                                        "Barrera 3",       //T4
-                                        "Entrada a piso 1",//T6
-                                        "Entrada a piso 2,Rampa de subida",//T7 T9
-                                        "Rampa de bajada,Salida de piso 2", //T10
-                                        "Salida de piso 1", //T8
-                                        "Caja calle 1,Salida 1 ",//T12 T14
-                                        "Caja calle 2,Salida 2",    //T13 T15
-                                        "Encender Cartel", //T16  //CARTEL ENCENDIDO
-                                        "Apagar cartel 1", //T17  //CARTEL APAGADO DEBIDO A QUE HAY UN LUGAR EN EL PISO 2
-                                        "Apagar cartel 2"};//T18  //SE APAGA EL CARTEL DEBIDO A QUE HAY LUGAR EN EL PISO 1
+    private static String Nombres[] = { "Entrada 1",        //T1
+                                        "Entrada 2",        //T2
+                                        "Entrada 3",        //T3
+                                        "Barrera 1",        //T4
+                                        "Barrera 2",        //T5
+                                        "Barrera 3",        //T6
+                                        "Entrada a piso 1", //T7
+                                        "Entrada a piso 2", //T8
+                                        "Encender Cartel",  //T9  //CARTEL ENCENDIDO
+                                        "Apagar cartel 1",  //T10  //CARTEL APAGADO DEBIDO A QUE HAY UN LUGAR EN EL PISO 2
+                                        "Apagar cartel 2",  //T11  //SE APAGA EL CARTEL DEBIDO A QUE HAY LUGAR EN EL PISO 1
+                                        "Salida de piso 1", //T12
+                                        "Salida de piso 2", //T13
+                                        "Caja calle 1",     //T14
+                                        "Caja calle 2",     //T15
+                                        "Salida 1",         //T16
+                                        "Salida 2"};        //T17
 
-    private static int[] Secuencias[]= {{0},{1},{2},{3},{5},{4},{6},{7,9},
-                                        {10,11},{8},{12,14},{13,15},{16},{17},
-                                        {18}};//secuencias de transiciones para cada hilo
+    private static int[] Secuencias[]= {{0},{1},{2},{3},{4},{5},{6},{7},{8},
+                                        {9},{10},{11},{12},{13},{14},{15},
+                                        {16}};//secuencias de transiciones para cada hilo
 
     private static Hilos hilos[];
     private static Thread threads[];
     private static Monitor monitor;
     private static RDP redDePetri;
     private static Politicas politicas;
+    private static AdministradorArchivo administradorArchivo;
     public static void main(String[] args) {
         input = new Scanner(System.in);
         System.out.println("#####Inicio Simulacion#####");
@@ -71,7 +76,8 @@ public class Main {
         monitor = new Monitor(redDePetri,politicas);*/
         redDePetri = new RDP();
         politicas = new Politicas(eleccion);
-        monitor = new Monitor(redDePetri, politicas);
+        administradorArchivo = new AdministradorArchivo(archivo);
+        monitor = new Monitor(redDePetri, politicas, administradorArchivo);
         //inicializacion hilos
         for(int i=0; i<numeroHilos;i++) {
             hilos[i] = new Hilos(Nombres[i],monitor,Secuencias[i]);
@@ -89,7 +95,7 @@ public class Main {
             System.out.println("Error al intentar dormir el hilo principal");
         }
         for(int k=0;k<numeroHilos;k++) {
-            //	threads[k].interrupt();
+            //threads[k].interrupt();
             threads[k].stop();;
         }
         try {
