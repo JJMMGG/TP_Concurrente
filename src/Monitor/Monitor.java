@@ -9,12 +9,14 @@ public class Monitor {
     private Cola cola; 			//cola donde se pondran los hilos
     private Politicas politica; //
     private Matriz and;			//matriz que contiene el resultado de la operacion Vc&Vs
+    private AdministradorArchivo archivo;
     /**
      * Constructor de la clase Monitor
      */
-    public Monitor(RDP red,Politicas politica) {
+    public Monitor(RDP red,Politicas politica, AdministradorArchivo archivo) {
         this.politica = politica;
         this.red = red; 										//la red sobre la cual se trabajara
+        this.archivo = archivo;
         politica.quitarPrioridad(red.getMatrizInhibicion());
         red.sensibilizar();
         cola = new Cola(red.getSensibilizadas().getNumColumnas());
@@ -27,37 +29,37 @@ public class Monitor {
      *@return : -0 retorna 0 si el disparo no es exitoso.
      *          -1 retorna 1 si el disparo no es exitoso.
      */
-    public void dispararTransicion(int n_transicion)
+    public void dispararTransicion(int n_transicion) throws InterruptedException
     {
-        try {
-            mutex.acquire();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        mutex.acquire();
+        System.out.println("En este momento la cola al monitor tiene " +mutex.getQueueLength() +" hilos esperando");
 
-        System.out.println("Disparo: Transicion"+ n_transicion);
         boolean k = true;
         int m = 0;
         int n_t;
         while(k == true) {
+            red.imprimirVectorMarcado();
+            System.out.println("Disparo: Transicion"+ n_transicion);
+            //saveInFile();
             k=red.Disparar(n_transicion);//, modo_de_disparo);
             if(k==true){
                 m=calcularVsAndVc();
                 if(m==0){
                     k = false;
                 }
-                else {//<>0
+                else {//<>0 hay alguien esperando y esta sensibilizado
                     n_t = politica.cual(and);//que hilo?
-                    cola.sacarDeCola(n_t);//este metodo obtiene el siguiente hilo debido a que el anterior disparo exitosamente
-                    //aca creeria que deberiamos expulsar el primer hilo
+                    cola.sacarDeCola(n_t);
+                    break;//aca creeria que deberiamos expulsar el primer hilo
                 }
             }
             else {
                 mutex.release();//el hilo actual libera el monitor
-                cola.ponerEnCola(n_transicion);//en realidad se pone en cola porque fallo el disparo
+                cola.ponerEnCola(n_transicion);//en cola porque fallo el disparo
+                mutex.acquire();//temporal
             }
         }
+        System.out.println("Libero el monitor");
         mutex.release();//el hilo actual libera el monitor
     }
     /**
@@ -68,13 +70,20 @@ public class Monitor {
     public int calcularVsAndVc(){
         Matriz Vs = red.getSensibilizadas();
         Matriz Vc = cola.quienesEstan();
+        /**/
+        /*System.out.println("Vector Extendido");
+        Vs.imprimirMatriz();
+        System.out.println("Vector Cola");
+        Vc.imprimirMatriz();
+        /**/
         and = Vs.getAnd(Vc);//m
         if(and.esNula()) {
             return 0;
         }
         return 1;
     }
-    void imprimir() {
-        System.out.println("----------------------------------MONITOR----------------------------------\n");
-    }
+    /*public void saveInFile(){
+        red.
+        archivo.EscribirEnArchivo();
+    }*/
 }
