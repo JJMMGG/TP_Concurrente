@@ -23,7 +23,7 @@ public class SensibilizadasConTiempo {
     private void iniciarArreglos(int transiciones){
         for(int i=0;i<transiciones;i++){
             esperando[i]=0;
-            timeStamp[i]=0;
+            timeStamp[i]=System.currentTimeMillis();
         }
     }
     /**
@@ -45,6 +45,9 @@ public class SensibilizadasConTiempo {
         long tiempoTranscurrido = ahora-timeStamp[transicion];
         int alfa = tiempos.getDato(0, transicion);
         int beta = tiempos.getDato(1, transicion);
+        if(alfa==beta){
+            return true;
+        }
         if((alfa<=tiempoTranscurrido)&&(tiempoTranscurrido<=beta)) {
             return true;
         }
@@ -99,7 +102,7 @@ public class SensibilizadasConTiempo {
         int alfa = tiempos.getDato(0, transicion);
         long ahora = System.currentTimeMillis();
         try{
-            Thread.sleep(timeStamp[transicion]+alfa-ahora);//en milisegundos
+            Thread.sleep((timeStamp[transicion]+alfa-ahora)*60000);
         }
         catch(Exception e){
             e.printStackTrace();
