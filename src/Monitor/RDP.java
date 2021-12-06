@@ -333,6 +333,9 @@ public class RDP {
         if(!estaSensibilizada(transicion)) {
             return false;
         }
+        if(!checkInvariantePlaza()){
+            throw new RuntimeException("NO SE CUMPLIO UN INVARIANTE DE PLAZA");
+        }
         boolean k;
         if(gestionarTiempo.testVentanaTiempo(transicion)) {
             if(!gestionarTiempo.Esperando(transicion)) {
@@ -388,5 +391,26 @@ public class RDP {
     }
     public Matriz getVectorMarcadoActual(){
         return VectorMarcadoActual;
+    }
+    public boolean checkInvariantePlaza(){
+        if(VectorMarcadoActual.getDato(0,0)+VectorMarcadoActual.getDato(0,1)!=3
+        ||VectorMarcadoActual.getDato(0,2)+VectorMarcadoActual.getDato(0,3)!=3
+        ||VectorMarcadoActual.getDato(0,4)+VectorMarcadoActual.getDato(0,5)!=3
+        ||VectorMarcadoActual.getDato(0,6)+VectorMarcadoActual.getDato(0,7)!=1
+        ||VectorMarcadoActual.getDato(0,8)+VectorMarcadoActual.getDato(0,9)!=30
+        ||VectorMarcadoActual.getDato(0,12)+VectorMarcadoActual.getDato(0,13)!=30
+        ||VectorMarcadoActual.getDato(0,14)+VectorMarcadoActual.getDato(0,15)!=1
+        ||VectorMarcadoActual.getDato(0,16)+VectorMarcadoActual.getDato(0,17)!=1
+        ||VectorMarcadoActual.getDato(0,19)+VectorMarcadoActual.getDato(0,20)!=1
+        ||VectorMarcadoActual.getDato(0,17)+VectorMarcadoActual.getDato(0,18)+
+                VectorMarcadoActual.getDato(0,19)!=1
+        ||VectorMarcadoActual.getDato(0,1)+VectorMarcadoActual.getDato(0,3)+
+                VectorMarcadoActual.getDato(0,5)+VectorMarcadoActual.getDato(0,7)+
+                VectorMarcadoActual.getDato(0,9)+VectorMarcadoActual.getDato(0,13)+
+                VectorMarcadoActual.getDato(0,15)+VectorMarcadoActual.getDato(0,17)+
+                VectorMarcadoActual.getDato(0,19)+VectorMarcadoActual.getDato(0,21)!=100
+        ||VectorMarcadoActual.getDato(0,10)+VectorMarcadoActual.getDato(0,11)!=1)
+            return false;
+        return true;
     }
 }
