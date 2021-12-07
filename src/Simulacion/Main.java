@@ -74,9 +74,9 @@ public class Main {
         redDePetri = new RDP(Transiciones, Plazas); // se envian los txt donde se van a escribir lo datos
         politicas = new Politicas(eleccion);
         monitor = new Monitor(redDePetri,politicas);*/
-        redDePetri = new RDP();
-        politicas = new Politicas(eleccion);
         administradorArchivo = new AdministradorArchivo(archivo);
+        redDePetri = new RDP(administradorArchivo);
+        politicas = new Politicas(eleccion);
         monitor = new Monitor(redDePetri, politicas, administradorArchivo);
         //inicializacion hilos
         for(int i=0; i<numeroHilos;i++) {
@@ -88,7 +88,7 @@ public class Main {
             threads[j].start();}
 
         try {
-            Thread.sleep(tiempoCorrida);
+            Thread.sleep(10*tiempoCorrida);
         }
         catch(InterruptedException e) {
             e.printStackTrace();

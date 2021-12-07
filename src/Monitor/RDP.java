@@ -3,6 +3,7 @@ package Monitor;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.concurrent.Semaphore;
 
 public class RDP {
     /////////Marcado inicial/////////////////////////////////////////////////////////
@@ -17,6 +18,7 @@ public class RDP {
     private String[] Place = {"P0","P1","P10","P11","P12","P13","P14","P15","P16","P17","P18","P19","P2","P20","P21","P22","P23","P3","P4","P5","P6","P7","P8","P9"};
     // private int [] Places = {0,1,10,13,14,15,17,18,19,20,22,23,24,25,26,27,28,29,3,30,31,4,5,8,9};
 
+    private AdministradorArchivo archivo;
     private final int numeroTransiciones; //almacena el numero de transiciones "n".
     private final int numeroPlazas;       //almacena el numero de plazas "m".
     //m x n
@@ -45,7 +47,7 @@ public class RDP {
     /**
      * Constructor de la clase Red de Petri
      */
-    public RDP() {
+    public RDP(AdministradorArchivo archivo) {
 
         numeroTransiciones = Transiciones(pathMatrizIncidencia);	//Extraccion de la cantidad de transiciones.
         numeroPlazas = Plazas(pathMatrizIncidencia);				//Extraccion de la cantidad de plazas.
@@ -77,6 +79,7 @@ public class RDP {
         //EXTRA
         gestionarTiempo = new SensibilizadasConTiempo(numeroTransiciones);
         //sensibilizar();
+        this.archivo=archivo;
     }
     /**
      * Este metodo devuelve la cantidad de transiciones disponibles en la red
@@ -122,94 +125,6 @@ public class RDP {
         }
 
         return Plazas;
-    }
-    ///////////////////////////////ELIMINAR
-    public void printInfo(){
-        System.out.println(numeroTransiciones);
-        System.out.println(numeroPlazas);
-        /*System.out.println("Matriz IEntrada");
-        for(int i=0; i<numeroPlazas;i++){
-            for(int j=0;j<numeroTransiciones;j++){
-                System.out.print(IEntrada.getDato(i,j));
-            }
-            System.out.print("\n");
-        }*/
-        /*System.out.println("Matriz ISalida");
-        for(int i=0; i<numeroPlazas;i++){
-            for(int j=0;j<numeroTransiciones;j++){
-                System.out.print(ISalida.getDato(i,j));
-            }
-            System.out.print("\n");
-        }*/
-        /*System.out.println("Matriz Incidencia");
-        for(int i=0; i<numeroPlazas;i++){
-            for(int j=0;j<numeroTransiciones;j++){
-                System.out.print(Incidencia.getDato(i,j));
-            }
-            System.out.print("\n");
-        }*/
-        /*System.out.println("Matriz Inhibicion");
-        for(int i=0; i<numeroPlazas;i++){
-            for(int j=0;j<numeroTransiciones;j++){
-                System.out.print(Inhibicion.getDato(i,j));
-            }
-            System.out.print("\n");
-        }*/
-        /*System.out.println("Matriz Identidad");
-        for(int i=0; i<numeroTransiciones;i++){
-            for(int j=0;j<numeroTransiciones;j++){
-                System.out.print(Identidad.getDato(i,j));
-            }
-            System.out.print("\n");
-        }*/
-        /*System.out.println("Matriz Inhibicion Lector");
-        for(int i=0; i<numeroPlazas;i++){
-            for(int j=0;j<numeroTransiciones;j++){
-                System.out.print(InhibicionLector.getDato(i,j));
-            }
-            System.out.print("\n");
-        }*/
-        /*System.out.println("Vector Marcado Inicial");
-        for(int i=0; i<numeroPlazas;i++){
-            System.out.print(VectorMarcadoInicial.getDato(0,i));
-        }*/
-        /*System.out.println("Vector Marcado Actual");
-        for(int i=0; i<numeroPlazas;i++){
-            System.out.print(VectorMarcadoActual.getDato(0,i));
-        }
-        System.out.println();
-        System.out.println("Vector Marcado Nuevo");
-        for(int i=0; i<numeroPlazas;i++){
-            System.out.print(VectorMarcadoViejo.getDato(0,i));
-        }*/
-        /*System.out.println("Vector Sensibilizado");
-        for(int i=0; i<numeroTransiciones;i++){
-                System.out.print(VectorSensibilizado.getDato(0,i));
-        }*/
-        /*System.out.println("Vector Sensibilizado Viejo");
-        for(int i=0; i<numeroTransiciones;i++){
-            System.out.print(VectorSensibilizadoViejo.getDato(0,i));
-        }*/
-        System.out.println("Vector Sensibilizado");
-        for(int i=0; i<numeroTransiciones;i++){
-            System.out.print(VectorSensibilizado.getDato(0,i));
-        }
-        System.out.println();
-        System.out.println("Vector Inhibicion");
-        for(int i=0; i<numeroTransiciones;i++){
-            System.out.print(VectorInhibicion.getDato(0,i));
-        }
-        System.out.println();
-        System.out.println("Vector Lector");
-        for(int i=0; i<numeroTransiciones;i++){
-            System.out.print(VectorLector.getDato(0,i));
-        }
-        System.out.println();
-        System.out.println("Vector Extendido");
-        for(int i=0; i<numeroTransiciones;i++){
-            System.out.print(VectorExtendido.getDato(0,i));
-        }
-        System.out.println();
     }
     /**
      * Este metodo verifica si la transicion esta sensibilizada en el vector
@@ -324,49 +239,60 @@ public class RDP {
     /**
      * Este metodo dispara una transicion de la rdp indicada por parametro, teniendo en cuenta el modo indicado por parametro
      *@param transicion : numero de transicion.
-     *			 -true : modo de disparo explicito, modifica el vector de marcado actual VMA
-     *           -false : modo de disparo implicito, no modifica el vector de marcado actual VMA
-     *@return : -0 retorna 0 si el disparo no es exitoso.
-     *          -1 retorna 1 si el disparo es exitoso.
+     *@return : true si el disparo es exitoso.
+     *          false si el disparo no es exitoso.
      */
-    public boolean Disparar(int transicion){ //, boolean flag) {
+    public boolean Disparar(int transicion, Semaphore mutex) throws InterruptedException, IOException{ //, boolean flag) {
         if(!estaSensibilizada(transicion)) {
             return false;
         }
         if(!checkInvariantePlaza()){
             throw new RuntimeException("NO SE CUMPLIO UN INVARIANTE DE PLAZA");
         }
-        boolean k;
-        if(gestionarTiempo.testVentanaTiempo(transicion)) {
-            if(!gestionarTiempo.Esperando(transicion)) {
-                gestionarTiempo.setNuevoTimeStamp(transicion);
-                k = true;
-            }
-            else {
-                k = false;
-            }
-        }
-        else {
-            //no esta dentro de la ventana esta antes?
-            if(gestionarTiempo.antesDeLaVentana(transicion)) {
-                //aca hay que liberar el monitor(antes de poner a dormir al hilo)
-                gestionarTiempo.setEsperando(transicion);
-                gestionarTiempo.dormir(transicion);
-                gestionarTiempo.resetEsperando(transicion);//en esta parte segun el diagrama no va este reset pero para hace falta
-            }
-            else {
-                k = false;
-            }
-        }
-        if(k=true) {
-            gestionarTiempo.resetEsperando(transicion);//va aca en teoria
+        boolean k=verificarSensibilizacionZ(transicion,mutex);
+        if(k==true) {
+            saveInFile(transicion);
+            gestionarTiempo.resetEsperando(transicion);
             Matriz aux = Incidencia.getMultiplicacion(Identidad.getColumna(transicion)).getTranspuesta();
             VectorMarcadoActual =VectorMarcadoActual.getSuma(aux);
             sensibilizar();
+            gestionarTiempo.setNuevoTimeStamp(transicion);
             return true;
         }
         else {
             return false;
+        }
+    }
+    /**
+     * Metodo que verifica las condiciones de temporizacion de las
+     * transiciones
+     * @oaram transicion
+     * @return
+     */
+    public boolean verificarSensibilizacionZ(int transicion, Semaphore mutex) throws InterruptedException{
+        if(gestionarTiempo.testVentanaTiempo(transicion)) {
+            if(!gestionarTiempo.Esperando(transicion)) {
+                gestionarTiempo.setNuevoTimeStamp(transicion);
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {//no esta dentro de la ventana
+            if(gestionarTiempo.antesDeLaVentana(transicion)) {//esta antes?
+                gestionarTiempo.setEsperando(transicion);
+                mutex.release();//aca hay que liberar el monitor(antes de poner a dormir al hilo)
+                gestionarTiempo.dormir(transicion);
+                mutex.acquire();//aca deberia adquirirlo
+                gestionarTiempo.resetEsperando(transicion);//en esta parte segun el diagrama no va este reset pero para mi hace falta
+                return true;//si pongo false me arriesgo a pasarme de la ventana(solo si fuera muy pequena)
+            }
+            else{
+                //gestionarTiempo.resetEsperando(transicion);
+                System.out.println("YA SE PASO");
+                return false;
+            }
         }
     }
     /***/
@@ -412,5 +338,19 @@ public class RDP {
         ||VectorMarcadoActual.getDato(0,10)+VectorMarcadoActual.getDato(0,11)!=1)
             return false;
         return true;
+    }
+    /**
+     * Metodo que guarda la informacion en el archivo
+     * @param transicion transicion que va a ser disparada
+     */
+    public void saveInFile(int transicion) throws IOException {
+        String infoMarcado="vector marcado actual : ";
+        infoMarcado += VectorMarcadoActual.getDatosConFormato();
+        archivo.EscribirEnArchivo(infoMarcado);
+        String infoExtendido = "vector extendido : ";
+        infoExtendido += VectorExtendido.getDatosConFormato();
+        archivo.EscribirEnArchivo(infoExtendido);
+        String infoTransicion = "transicion : "+transicion+"\n";
+        archivo.EscribirEnArchivo(infoTransicion);
     }
 }

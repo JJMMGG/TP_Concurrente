@@ -102,7 +102,8 @@ public class SensibilizadasConTiempo {
         int alfa = tiempos.getDato(0, transicion);
         long ahora = System.currentTimeMillis();
         try{
-            Thread.sleep((timeStamp[transicion]+alfa-ahora)*60000);
+            Thread.sleep(timeStamp[transicion]+alfa-ahora);
+            System.out.println("Me voy a dormir durante: "+((timeStamp[transicion]+alfa-ahora)));
         }
         catch(Exception e){
             e.printStackTrace();

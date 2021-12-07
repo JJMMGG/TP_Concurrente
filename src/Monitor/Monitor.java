@@ -41,9 +41,9 @@ public class Monitor {
         while(k == true) {
             red.imprimirVectorMarcado();
             System.out.println("Disparo: Transicion"+ n_transicion);
-            k=red.Disparar(n_transicion);//, modo_de_disparo);
+            k=red.Disparar(n_transicion, mutex);//, modo_de_disparo);
             if(k==true){
-                saveInFile(n_transicion);
+                //saveInFile(n_transicion);
                 m=calcularVsAndVc();
                 if(m==0){
                     k = false;
@@ -55,6 +55,7 @@ public class Monitor {
                 }
             }
             else {
+                System.out.println("Encolado");
                 mutex.release();//el hilo actual libera el monitor
                 cola.ponerEnCola(n_transicion);//en cola porque fallo el disparo
                 mutex.acquire();//temporal
@@ -82,7 +83,7 @@ public class Monitor {
      * Metodo que guarda la informacion en el archivo
      * @param transicion transicion que va a ser disparada
      */
-    public void saveInFile(int transicion) throws IOException {
+    /*public void saveInFile(int transicion) throws IOException {
         Matriz Marcado=red.getVectorMarcadoActual();
         String infoMarcado="vector marcado actual : ";
         infoMarcado += Marcado.getDatosConFormato();
@@ -93,5 +94,5 @@ public class Monitor {
         archivo.EscribirEnArchivo(infoExtendido);
         String infoTransicion = "transicion : "+transicion+"\n";
         archivo.EscribirEnArchivo(infoTransicion);
-    }
+    }*/
 }
