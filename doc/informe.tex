@@ -1,0 +1,165 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{graphicx}
+\graphicspath{{img/}}
+
+\title{Trabajo Practico Programacion Concurrente}
+\author{Juan Manuel Giron}
+\date{2018}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduccion}
+Este trabajo tiene como objetivo la simulacion de un estacionamiento de autos. 
+Esta simulacion se realizara haciendo uso de hilos y una Red de Petri, la cual 
+debe cumplir con las condiciones establecidas en el enunciado del problema.
+\section{Desarrollo}
+	\subsection{Red De Petri}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.75\textwidth]{RedDePetri}
+		\caption{Red de Petri que modela el estacionamiento}
+		\label{fig:mesh1}
+	\end{figure}
+	\subsection{Eventos y Estados}
+	\begin{table}[h!]
+		\begin{center}
+		\begin{tabular}{ |c|c| } 
+ 			\hline
+ 			Transiciones & Eventos \\ 
+ 			T1 & Auto ingresa por calle 1 \\
+ 			T2 & Auto ingresa por calle 2 \\
+ 			T3 & Auto ingresa por calle 3 \\
+ 			T4 & Auto pasa barrera 1 \\
+ 			T5 & Auto pasa barrera 2 \\
+ 			T6 & Auto pasa barrera 3 \\ 
+ 			T7 & Auto ingresa al primer piso \\
+ 			T8 & Auto ingresa al segundo piso \\
+ 			T9 & Encender cartel \\
+ 			T10 & Apagar cartel por espacio disponible en piso 1 \\
+ 			T11 & Apagar cartel por espacio disponible en piso 2 \\
+ 			T12 & Auto sale del primer piso \\
+ 			T13 & Auto sale del segundo piso \\
+ 			T14 & Auto entrando a caja calle 1 \\
+ 			T15 & Auto entrando a caja calle 2 \\
+ 			T16 & Auto saliendo calle 1\\
+ 			T17 & Auto saliendo calle 2 \\ 
+ 			\hline
+		\end{tabular}
+		\end{center}
+		\caption{Tabla de eventos}
+		\label{table:eventos}
+	\end{table}
+	
+	\begin{table}[h!]
+		\begin{center}
+		\begin{tabular}{ |c|c| } 
+ 			\hline
+ 			Plazas & Estados \\ 
+ 			P1 & Espacios disponibles de espera antes de la barrera 1 \\
+ 			P2 & Autos esperando antes de la barrera 1 \\
+ 			P3 & Espacios disponibles de espera antes de la barrera 2 \\
+ 			P4 & Autos esperando antes de la barrera 2 \\
+ 			P5 & Espacios disponibles de espera antes de la barrera 3 \\
+ 			P6 & Autos esperando antes de la barrera 3 \\ 
+ 			P7 & Lugar disponible en la calle de entrada \\
+ 			P8 & Auto circulando por la calle de entrada \\
+ 			P9 & Lugares disponibles para estacionar en el primer piso \\
+ 			P10 & Autos estacionados en el primer piso \\
+ 			P11 & Cartel encendido, es decir no hay lugar \\
+ 			P12 & Cartel apagado, es decir hay lugar \\
+ 			P13 & Lugares disponibles para estacionar en el segundo piso \\
+ 			P14 & Autos estacionados en el segundo piso \\
+ 			P15 & Lugar disponible en la calle de salida \\
+ 			P16 & Auto circulando por la calle de salida\\
+ 			P17 & Calle de salida 1\\
+ 			P18 & Auto pagando en la calle de salida 1 \\
+ 			P19 & Cajero/caja \\ 
+ 			P20 & Auto pagando en la calle de salida 2 \\
+ 			P21 &  Calle de salida 2\\
+ 			P22 & Autos totales \\
+ 			\hline
+		\end{tabular}
+		\end{center}
+		\caption{Tabla de estados}
+		\label{table:estados}
+	\end{table}
+	\subsection{Analisis De La Red De Petri}
+	Al realizar un analisis sobre la red de petri se pueden determinar las siguientes propiedades:
+	\begin{itemize}
+		\item Vivacidad: Al realizar el analisis concluimos que todas las transiciones 
+		de la red pueden ser disparadas siempre y las que no pueden se verifica que 
+		existe una secuencia de disparos que llevan a su sensibilizacion y posterior 
+		disparo, por lo tanto se puede afirmar que la red tiene Vivacidad.
+		\item Seguridad: La condición para que una Red de Petri sea segura es que cada 
+		plaza que la compone debe tener como maximo un token. Por lo tanto esta red no es segura.
+		\item Limitación: Una Red de Petri está limitada si todos las plazas están limitados por 
+		un numero natural k, es decir que todas las plazas pueden contener a lo sumo k-token. 
+		Por lo tanto la red es limitada.
+		\item Libre de conflicto y conflictos estructurales: Se dice que existe un conflicto 
+		estructural cuando al menos dos transiciones tienen una plaza en común. Podemos 
+		observar que esto se cumple dos veces en esta red, por lo que no es libre de conflictos 
+		y tiene conflictos estructurales. Ambos conflictos quedan denotados como:
+		$K = < P_{8}\left\lbrace T_{7},T_{8}\right\rbrace >$
+		$K = < P_{16}\left\lbrace T_{14},T_{15}\right\rbrace >$
+		\item Libre elección: Una red es de libre elección cuando las transiciones 
+		que participan en un conflicto tienen una sola plaza de entrada. Por lo 
+		tanto se puede afirmar que no tiene libre elección.
+		\item Simple: La red es simple ya que las transiciones solo se ven afectadas 
+		por solo un conflicto.
+		\item Pura: Una Red de Petri es pura cuando no posee ningun auto-loop. En esta 
+		red se encuentran dos auto-loop, por lo tanto no es pura. Estos auto-loops se 
+		deben a que se utilizaron para modelar los arcos lectores.
+		\item Capacidad finita: Cuando las plazas de la red están limitadas a un número 
+		máximo de tokens, se dice que tiene capacidad finita, en este caso las plazas 
+		pueden contener infinitos token por lo que la red no es de capacidad finita.
+		Pero esto solo es debido a que las capcidades fueron modeladas a traves de una red ordinaria.
+		\item Red de Petri No-autónoma: Una RdP no-autónoma es aquella que está 
+		sincronizada/temporizada. Por lo tanto es no-autónoma.
+		\item Interbloqueo: Se dice que una red presenta interbloqueo si tiene deadlock, 
+		es decir alguna marca alcanzable desde donde no se puede disparar ninguna otra 
+		transición.Por lo tanto esta red está libre de interbloqueo.
+		\item Persistencia: Se dice que una Red de Petri es persistente si para cada 
+		transición se cumple que dicha transición sólo puede ser desensibilizada por 
+		su propio disparo. Por lo tanto y al existir conflicto estructural, esta red 
+		no es persistente.
+		\item Conservación: Se dice que una Red de Petri cumple con esta propiedad si 
+		los tokens que se generan y consumen en la red permanecen constantes. Por lo 
+		tanto es conservativa.
+	\end{itemize}
+	\subsection{Invariantes}
+		\subsubsection{Invariantes de Plaza}
+		\subsubsection{Invariantes de Transicion}
+	\subsection{Sistema Monitor Usando Programacion Orientada a Objetos}
+		\subsubsection{Diagrama De Clases}
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.75\textwidth]{Diagrama_de_Clase}
+			\caption{Diagrama de clases del sistema}
+			\label{fig:mesh2}
+		\end{figure}
+		\subsubsection{Diagrama De Secuencia}
+		A continuacion se presenta el diagrama de secuencia del sistema en el cual 
+		se representa la seccion critica del programa
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.75\textwidth]{Diagrama_de_secuencia}
+			\caption{Diagrama de secuencia del sistema}
+			\label{fig:mesh3}
+		\end{figure}
+		\subsubsection{Verificacion De Invariantes}
+		\textbf{P-Invariantes} \newline
+		Para asegurar que los invariantes de plaza se cumplen se deben verificar las 
+		expresiones anteriores cada vez que se realiza un disparo en la red, ya que 
+		cada vez que lo hace se actualiza el marcado, en caso de no cumplirse el programa
+		se detendra a traves del lanzamiento de una excepcion.\newline
+		\textbf{T-Invariantes} \newline
+		Para verificar los invariantes de transicion hay que ejecutar la simulacion una vez, 
+		para luego a partir del archivo resultante extraer y armar las secuencias de disparo.
+		Las secuencias se verifican a traves de expresiones regulares.		 
+		
+
+\end{document}
