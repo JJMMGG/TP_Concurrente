@@ -6,8 +6,8 @@ import re
                     El nombre del archivo
     Returns
     -------
-    list
-        a list of strings used that are the header columns
+    string
+        Contiene las transiciones disparadas en la simulacion
 '''
 def leer_archivo(nombre_archivo):
     transiciones=''
