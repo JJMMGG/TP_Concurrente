@@ -1,20 +1,25 @@
 import re
 '''
-    param: name of file
-    return: disparos as string
-    e.g:
+    Parameters
+    ----------
+    nombre_archivo :
+                    El nombre del archivo
+    Returns
+    -------
+    list
+        a list of strings used that are the header columns
 '''
-def readFile(filename):
-    disparos=''
-    with open(filename, 'rt') as f:
-        data = f.readlines()
-    for line in data:
-        if line.__contains__('disparo'):
-            line_arr=line.split('=')
-            disparo=int(line_arr[1])
-            disparos+='T'+'{:X}'.format(disparo)
+def leer_archivo(nombre_archivo):
+    transiciones=''
+    with open(nombre_archivo, 'rt') as f:
+        info = f.readlines()
+    for linea in info:
+        if linea.__contains__('transicion'):
+            line_arr=linea.split(' : ')
+            transicion=int(line_arr[1])
+            transiciones+='T'+'{:X}'.format(transicion)
 
-    return disparos
+    return transiciones
 
 '''
     Run re.subn iterative
@@ -36,7 +41,7 @@ def tinv_matcher():
     print("Generating file : "+logfilenameO+" ...")
 
     # Disparos to string (i.e. T0T1T6T0T1T6T0T2T13T0T2T13T0T1T6...)
-    string=readFile(logfilenameI)
+    string=leer_archivo(logfilenameI)
 
     # Create logTinv.txt
     logfile = open(logfilenameO, "a")
