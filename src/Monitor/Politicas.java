@@ -45,10 +45,10 @@ public class Politicas {
                 inhibicion.setDato(Plaza2, Transicion2, 0);
                 break;
             case opcionLLenadoPlantaBaja:
-                inhibicion.setDato(Plaza1, Transicion1, 0);
+                inhibicion.setDato(Plaza2, Transicion2, 0);
                 break;
             case opcionSalidaCalleDos:
-                inhibicion.setDato(Plaza2, Transicion2, 0);
+                inhibicion.setDato(Plaza1, Transicion1, 0);
                 break;
             default:
                 break;
