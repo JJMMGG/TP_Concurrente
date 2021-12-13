@@ -31,7 +31,7 @@ debe cumplir con las condiciones establecidas en el enunciado del problema.
 		\label{fig:mesh1}
 	\end{figure}
 	\subsection{Eventos y Estados}
-	Las siguientes tablas tienen como objetivo exponer el significado fisico de las transiciones y plazas en la red de petri
+	Las siguientes tablas tienen como objetivo exponer el significado fisico de las transiciones y plazas en la red de petri.
 	\begin{table}[H]
 		\begin{center}
 		\begin{tabular}{ |c|c| } 
@@ -57,7 +57,7 @@ debe cumplir con las condiciones establecidas en el enunciado del problema.
  			\hline
 		\end{tabular}
 		\end{center}
-		\caption{Tabla de eventos}
+		\caption{Tabla de eventos.}
 		\label{table:eventos}
 	\end{table}
 	
@@ -91,7 +91,7 @@ debe cumplir con las condiciones establecidas en el enunciado del problema.
  			\hline
 		\end{tabular}
 		\end{center}
-		\caption{Tabla de estados}
+		\caption{Tabla de estados.}
 		\label{table:estados}
 	\end{table}
 	\subsection{Analisis De La Red De Petri}
@@ -111,7 +111,7 @@ debe cumplir con las condiciones establecidas en el enunciado del problema.
 		observar que esto se cumple dos veces en esta red, por lo que no es libre de conflictos 
 		y tiene conflictos estructurales. Ambos conflictos quedan denotados como:
 		$K = < P_{8}\left\lbrace T_{7},T_{8}\right\rbrace >$
-		$K = < P_{16}\left\lbrace T_{14},T_{15}\right\rbrace >$
+		$K = < P_{16}\left\lbrace T_{14},T_{15}\right\rbrace >$.
 		\item Libre elección: Una red es de libre elección cuando las transiciones 
 		que participan en un conflicto tienen una sola plaza de entrada. Por lo 
 		tanto se puede afirmar que no tiene libre elección.
@@ -137,6 +137,8 @@ debe cumplir con las condiciones establecidas en el enunciado del problema.
 		los tokens que se generan y consumen en la red permanecen constantes. Por lo 
 		tanto es conservativa.
 	\end{itemize}
+	\subsubsection{Hilos}
+	Una vez terminado el diseño de la red se procede a determinar la cantidad de hilos, donde se establecio que cada hilo disparara una transicion quedando asi un total de 17 hilos.
 	\subsection{Invariantes}
 	Los invariantes permiten caracterizar propiedades de las marcas alcanzables
 	y de las tansiciones inalterables, independientemente de la evolucion, a continuacion se analizaran los invariantes de plaza y transicion.
@@ -177,19 +179,21 @@ debe cumplir con las condiciones establecidas en el enunciado del problema.
 		\item $\left\lbrace T8,TA \right\rbrace$
 		\end{itemize}
 	\subsection{Sistema Monitor Usando Programacion Orientada a Objetos}
+	A continuacion mediante el uso de diagrams UML se describira como esta estructurado el sistema.
 		\subsubsection{Diagrama De Clases}
+		En la figura \ref{fig:mesh2} observamos el diagrama de clases del sistema.
 		\begin{figure}[H]
 			\centering
 			\includegraphics[width=0.75\textwidth]{Diagrama_de_Clase}
-			\caption{Diagrama de clases del sistema}
+			\caption{Diagrama de clases del sistema.}
 			\label{fig:mesh2}
 		\end{figure}
 		\subsubsection{Diagrama De Secuencia}
-		A continuacion se presenta el diagrama de secuencia del sistema
+		A continuacion en la figura \ref{fig:mesh3} se presenta el diagrama de secuencia del sistema.
 		\begin{figure}[H]
 			\centering
 			\includegraphics[width=0.75\textwidth]{Diagrama_de_secuencia}
-			\caption{Diagrama de secuencia del sistema}
+			\caption{Diagrama de secuencia del sistema.}
 			\label{fig:mesh3}
 		\end{figure}
 		\subsubsection{Verificacion De Invariantes}
@@ -205,11 +209,21 @@ debe cumplir con las condiciones establecidas en el enunciado del problema.
 		\begin{figure}[H]
 			\centering
 			\includegraphics[width=0.75\textwidth]{debuggex}
-			\caption{Diagrama del patron}
+			\caption{Diagrama del patron.}
 			\label{fig:mesh4}
 		\end{figure}
 
 \section{Conclusion}
+	Tras la finalización del presente trabajo se puede llegar a las siguientes conclusiones.
+	Se aprendió las ventajas y desventajas de la programación concurrente. Algunas ventajas son la veloz ejecucion y tiempo de respuesta en un entorno multihilos, otra ventaja es la mejor utilizacion de las capacidades de los procesadore modernos. Algunas de las desventajas son la dificultad de debuggeo, ya que en un principio se presentaron problemas de exclusion mutua que no se cumplian al ingresar al recurso compartido.\newline
+	Tambien se puede destacar las ventajas de realizar simulaciones con Redes de Petri, siendo las principales:
+	\begin{itemize}
+		\item El respaldo matematico que nos provee ya que esta nos brinda capacidad de validación 
+		contra anomalias como son los bloqueos y fallas en la exclucion mutua.
+		\item Facilidad para modelar las características relevantes de los sistemas concurrente (Concurrencia, 
+		sincronización, bloqueos, etc.)
+		\item Análisis y animación mediante simuladores basados en evento discretos.
+	\end{itemize}
 	
 \section{Bibliografia}
 	\begin{itemize}
