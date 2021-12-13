@@ -18,7 +18,7 @@ public class Monitor {
         this.politica = politica;
         this.red = red; 										//la red sobre la cual se trabajara
         this.archivo = archivo;
-        politica.quitarPrioridad(red.getMatrizInhibicion());
+        //politica.quitarPrioridad(red.getMatrizInhibicion());
         red.sensibilizar();
         cola = new Cola(red.getSensibilizadas().getNumColumnas());
         mutex = new Semaphore(1,true);				//el semaforo que se utilizara, solo uno puede entrar y es justo.

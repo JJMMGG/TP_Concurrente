@@ -7,8 +7,10 @@ public class Politicas {
     //Campos
     private static final int Plaza1=8;//P9
     private static final int Transicion1 = 7;//T8
+    private static final int TransicionP1 = 6;//T7
     private static final int Plaza2=16;//P17
     private static final int Transicion2 = 14;//T15
+    private static final int TransicionP2 = 13;//T14
     private int politica;
     static final int opcionIndiferente = 0;
     static final int opcionLLenadoPlantaBaja = 1;
@@ -29,6 +31,22 @@ public class Politicas {
             //aleatorio = rand.nextInt(maximo);
             aleatorio=ThreadLocalRandom.current().nextInt(maximo);
             siguiente=m.getDato(0, aleatorio);
+            switch (politica){
+                case opcionIndiferente:
+                    break;
+                case opcionLLenadoPlantaBaja:
+                    if(aleatorio==Transicion1 && m.getDato(0,TransicionP1)==1){
+                        aleatorio=TransicionP1;
+                        siguiente=1;//en teoria no hace falta
+                    }
+                    break;
+                case opcionSalidaCalleDos:
+                    if(aleatorio==Transicion2 && m.getDato(0,TransicionP2)==1){
+                        aleatorio=TransicionP2;
+                        siguiente=1;
+                    }
+                    break;
+            }
         }
         System.out.println("El hilo a despertar es: "+aleatorio);
         return aleatorio;
