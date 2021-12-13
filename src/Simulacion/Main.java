@@ -8,14 +8,10 @@ import java.util.Scanner;
 import java.io.IOException;
 
 public class Main {
-    //private static final int numeroHilos = 15;
     private static final int numeroHilos = 17;
     private static final int tiempoCorrida = 60000;//en milisegundos DEF=60000
     private static final String archivo="./run.log";
     private static Scanner input;
-    /*private static Escribir_txt Transiciones;
-    private static Escribir_txt Plazas;
-    private static Escribir_txt Estadisticas;*/
     private static String Nombres[] = { "Entrada 1",        //T1
                                         "Entrada 2",        //T2
                                         "Entrada 3",        //T3
@@ -65,15 +61,6 @@ public class Main {
     public static void iniciarPrograma(int eleccion) throws IOException{
         hilos = new Hilos[numeroHilos];
         threads = new Thread[numeroHilos];
-        /*String transicion = "./Transiciones.txt";
-        Transiciones = new Escribir_txt(transicion);
-        String plazas = "./Plazas.txt";
-        Plazas = new Escribir_txt(plazas);
-        String estadisticas = "./Estadisticas.txt";
-        Estadisticas = new Escribir_txt(estadisticas);
-        redDePetri = new RDP(Transiciones, Plazas); // se envian los txt donde se van a escribir lo datos
-        politicas = new Politicas(eleccion);
-        monitor = new Monitor(redDePetri,politicas);*/
         administradorArchivo = new AdministradorArchivo(archivo);
         redDePetri = new RDP(administradorArchivo);
         politicas = new Politicas(eleccion);
@@ -88,7 +75,7 @@ public class Main {
             threads[j].start();}
 
         try {
-            Thread.sleep(10*tiempoCorrida);
+            Thread.sleep(tiempoCorrida/6);
         }
         catch(InterruptedException e) {
             e.printStackTrace();
@@ -105,16 +92,6 @@ public class Main {
             e.printStackTrace();
             System.out.println("Error al intentar dormir el hilo principal");
         }
-        /*System.out.println("Invariant test beginning");
-        Test_Invariantes test = new Test_Invariantes(redDePetri,Estadisticas);
-        test.testear();
-        String tiempo = "Tiempo de simulacion en milisegundos: "+ tiempoCorrida+" " ;
-        try {
-            Estadisticas.Escribir_Dato(tiempo);
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        System.out.println("Finish test");*/
     }
 }
 /*RDP red=new RDP();
