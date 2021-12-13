@@ -1,9 +1,13 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
 \usepackage{float}
 \usepackage{listings}
 \usepackage{graphicx}
 \graphicspath{{img/}}
+%Para enlaces
+\usepackage{blindtext}
+\usepackage{hyperref}
 
 \title{Trabajo Practico Programacion Concurrente}
 \author{Juan Manuel Giron}
@@ -13,6 +17,7 @@
 
 \maketitle
 
+\tableofcontents
 \section{Introduccion}
 Este trabajo tiene como objetivo la simulacion de un estacionamiento de autos. 
 Esta simulacion se realizara haciendo uso de hilos y una Red de Petri, la cual 
@@ -26,7 +31,7 @@ debe cumplir con las condiciones establecidas en el enunciado del problema.
 		\label{fig:mesh1}
 	\end{figure}
 	\subsection{Eventos y Estados}
-	A continuacion texto antes de las tablas
+	Las siguientes tablas tienen como objetivo exponer el significado fisico de las transiciones y plazas en la red de petri
 	\begin{table}[H]
 		\begin{center}
 		\begin{tabular}{ |c|c| } 
@@ -196,8 +201,7 @@ debe cumplir con las condiciones establecidas en el enunciado del problema.
 		\textbf{T-Invariantes} \newline
 		Para verificar los invariantes de transicion hay que ejecutar la simulacion una vez, 
 		para luego a partir del archivo resultante extraer y armar las secuencias de disparo.
-		Las secuencias se verifican a traves de un script python y mediante la libreria re el cual nos da acceso a las expresiones regulares. Lo primero es armar el patron para esto se uso una herramienta online llamada debuggex, en la figura \ref{fig:mesh4} observamos el resultado obtenido en la misma.
-		.		 
+		Las secuencias se verifican a traves de un script python y mediante la libreria re el cual nos da acceso a las expresiones regulares. Lo primero es armar el patron para esto se uso una herramienta online llamada debuggex, en la figura \ref{fig:mesh4} observamos el resultado obtenido en la misma.		 
 		\begin{figure}[H]
 			\centering
 			\includegraphics[width=0.75\textwidth]{debuggex}
@@ -206,4 +210,11 @@ debe cumplir con las condiciones establecidas en el enunciado del problema.
 		\end{figure}
 
 \section{Conclusion}
+	
+\section{Bibliografia}
+	\begin{itemize}
+		\item Ecuación de estado generalizada para redes de Petri no autónomas y con distintos tipos de arcos. Dr. Ing. Orlando Micolini1, Geol. Marcelo Cebollada y Verdaguer1, Ing. Maximiliano Eschoyez, Ing. Luis Orlando Ventre1, Ing. Marcelo Ismael Schild. Laboratorio de Arquitectura de Computadoras (LAC) FCEFyN Universidad Nacional de Córdoba.
+		\item \url{https://www.debuggex.com/}.
+		\item \href {https://docs.python.org/3/library/re.html}{https://docs.python.org/3/library/re.html}
+	\end{itemize}
 \end{document}
