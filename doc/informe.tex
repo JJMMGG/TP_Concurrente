@@ -1,5 +1,6 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
+\usepackage{float}
 \usepackage{listings}
 \usepackage{graphicx}
 \graphicspath{{img/}}
@@ -18,14 +19,15 @@ Esta simulacion se realizara haciendo uso de hilos y una Red de Petri, la cual
 debe cumplir con las condiciones establecidas en el enunciado del problema.
 \section{Desarrollo}
 	\subsection{Red De Petri}
-	\begin{figure}[h]
+	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.75\textwidth]{RedDePetri}
 		\caption{Red de Petri que modela el estacionamiento}
 		\label{fig:mesh1}
 	\end{figure}
 	\subsection{Eventos y Estados}
-	\begin{table}[h!]
+	A continuacion texto antes de las tablas
+	\begin{table}[H]
 		\begin{center}
 		\begin{tabular}{ |c|c| } 
  			\hline
@@ -54,7 +56,7 @@ debe cumplir con las condiciones establecidas en el enunciado del problema.
 		\label{table:eventos}
 	\end{table}
 	
-	\begin{table}[h!]
+	\begin{table}[H]
 		\begin{center}
 		\begin{tabular}{ |c|c| } 
  			\hline
@@ -131,20 +133,55 @@ debe cumplir con las condiciones establecidas en el enunciado del problema.
 		tanto es conservativa.
 	\end{itemize}
 	\subsection{Invariantes}
+	Los invariantes permiten caracterizar propiedades de las marcas alcanzables
+	y de las tansiciones inalterables, independientemente de la evolucion, a continuacion se analizaran los invariantes de plaza y transicion.
 		\subsubsection{Invariantes de Plaza}
+		Un invariante de plaza es un subconjunto de lugares $P=\left\lbrace P_1,P_2,...,P_n \right\rbrace$ y un vector de ponderacion $\left\lbrace q_1,q_2,..., q_n \right\rbrace$ para el cual todos los pesos $q_i$ son enteros positivos tales que cumplen con:\newline
+		$q_1*m(P_1),q_2*m(P_2),..., q_n*m(P_n)=K$ (constante) para cada $m\in M(m_0)$.\newline 
+		Al analizar la red obtenemos los siguientes p-invariantes:
+		\begin{itemize}
+		\item $M(P0)+M(P1)=3$
+		\item $M(P2)+M(P3)=3$
+		\item $M(P4)+M(P5)=3$
+		\item $M(P6)+M(P7)=1$
+		\item $M(P8)+M(P9)=30$
+		\item $M(P12)+M(P13)=30$
+		\item $M(P14)+M(P15)=1$
+		\item $M(P16)+M(P17)=1$
+		\item $M(P19)+M(P20)=1$
+		\item $M(P17)+M(P18)+M(P19)=1$
+		\item $M(P1)+M(P3)+M(P5)+M(P7)+M(P9)+M(P13)+M(P15)+M(P17)+M(P19)+M(P21)=100$
+		\item $M(P10)+M(P11)=1$
+		\end{itemize}		
 		\subsubsection{Invariantes de Transicion}
+		Un invariante de transicion es aquella secuencia de transiciones disparadas tal que el estado de marcado final es igual al inicial. Al analizar la red obtenemos los siguientes t-invariantes:
+		\begin{itemize}
+		\item $\left\lbrace T0,T3,T6,TB,TD,TF \right\rbrace$
+		\item $\left\lbrace T0,T3,T6,TB,TE,TX \right\rbrace$
+		\item $\left\lbrace T0,T3,T7,TC,TD,TF \right\rbrace$
+		\item $\left\lbrace T0,T3,T7,TC,TE,TX \right\rbrace$
+		\item $\left\lbrace T1,T4,T6,TB,TD,TF \right\rbrace$
+		\item $\left\lbrace T1,T4,T6,TB,TE,TX \right\rbrace$
+		\item $\left\lbrace T1,T4,T7,TC,TD,TF \right\rbrace$
+		\item $\left\lbrace T1,T4,T7,TC,TE,TX \right\rbrace$
+		\item $\left\lbrace T2,T5,T6,TB,TD,TF \right\rbrace$
+		\item $\left\lbrace T2,T5,T6,TB,TE,TX \right\rbrace$
+		\item $\left\lbrace T2,T5,T7,TC,TD,TF \right\rbrace$
+		\item $\left\lbrace T2,T5,T7,TC,TE,TX \right\rbrace$
+		\item $\left\lbrace T8,T9 \right\rbrace$
+		\item $\left\lbrace T8,TA \right\rbrace$
+		\end{itemize}
 	\subsection{Sistema Monitor Usando Programacion Orientada a Objetos}
 		\subsubsection{Diagrama De Clases}
-		\begin{figure}[h]
+		\begin{figure}[H]
 			\centering
 			\includegraphics[width=0.75\textwidth]{Diagrama_de_Clase}
 			\caption{Diagrama de clases del sistema}
 			\label{fig:mesh2}
 		\end{figure}
 		\subsubsection{Diagrama De Secuencia}
-		A continuacion se presenta el diagrama de secuencia del sistema en el cual 
-		se representa la seccion critica del programa
-		\begin{figure}[h]
+		A continuacion se presenta el diagrama de secuencia del sistema
+		\begin{figure}[H]
 			\centering
 			\includegraphics[width=0.75\textwidth]{Diagrama_de_secuencia}
 			\caption{Diagrama de secuencia del sistema}
@@ -159,7 +196,14 @@ debe cumplir con las condiciones establecidas en el enunciado del problema.
 		\textbf{T-Invariantes} \newline
 		Para verificar los invariantes de transicion hay que ejecutar la simulacion una vez, 
 		para luego a partir del archivo resultante extraer y armar las secuencias de disparo.
-		Las secuencias se verifican a traves de expresiones regulares.		 
-		
+		Las secuencias se verifican a traves de un script python y mediante la libreria re el cual nos da acceso a las expresiones regulares. Lo primero es armar el patron para esto se uso una herramienta online llamada debuggex, en la figura \ref{fig:mesh4} observamos el resultado obtenido en la misma.
+		.		 
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.75\textwidth]{debuggex}
+			\caption{Diagrama del patron}
+			\label{fig:mesh4}
+		\end{figure}
 
+\section{Conclusion}
 \end{document}
