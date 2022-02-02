@@ -138,7 +138,7 @@ debe cumplir con las condiciones establecidas en el enunciado del problema.
 		tanto es conservativa.
 	\end{itemize}
 	\subsubsection{Hilos}
-	Una vez terminado el diseño de la red se procede a determinar la cantidad de hilos, donde se establecio que cada hilo disparara una transicion quedando asi un total de 17 hilos.
+	Una vez terminado el diseño de la red se procede a determinar la cantidad de hilos, se establecio que un hilo disparara las transiciones (0,1,2,3,4 y 5) ya que si por ejemplo se utilizara un solo hilo para las transiciones (0 y 3) nunca se agotarian los lugares disponibles. Por la misma razon es que la transiciones 6-11 y 7-12 no son disparadas por el mismo hilo. Finalmente las transiciones 13 y 15 al igual que las transiciones 14 y 16 son disparadas por un hilo cada par.
 	\subsection{Invariantes}
 	Los invariantes permiten caracterizar propiedades de las marcas alcanzables
 	y de las tansiciones inalterables, independientemente de la evolucion, a continuacion se analizaran los invariantes de plaza y transicion.
@@ -160,6 +160,20 @@ debe cumplir con las condiciones establecidas en el enunciado del problema.
 		\item $M(P1)+M(P3)+M(P5)+M(P7)+M(P9)+M(P13)+M(P15)+M(P17)+M(P19)+M(P21)=100$
 		\item $M(P10)+M(P11)=1$
 		\end{itemize}		
+		Al realizar el analisis a traves del software PIPE obtenemos los invariantes que observamos en la figura \ref{fig:mesh5} y en la figura \ref{fig:mesh6} 
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.75\textwidth]{Invariantes_P_Tabla}
+			\caption{Invariantes de Plaza.}
+			\label{fig:mesh5}
+		\end{figure}
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.75\textwidth]{Invariantes_P}
+			\caption{Invariantes de Plaza.}
+			\label{fig:mesh6}
+		\end{figure}
+		
 		\subsubsection{Invariantes de Transicion}
 		Un invariante de transicion es aquella secuencia de transiciones disparadas tal que el estado de marcado final es igual al inicial. Al analizar la red obtenemos los siguientes t-invariantes:
 		\begin{itemize}
@@ -178,6 +192,20 @@ debe cumplir con las condiciones establecidas en el enunciado del problema.
 		\item $\left\lbrace T8,T9 \right\rbrace$
 		\item $\left\lbrace T8,TA \right\rbrace$
 		\end{itemize}
+		En la figura \ref{fig:mesh7} observamos el resultado obtenido en PIPE, no se obtiene el resto de invariantes debido a que el sistema no los ve como un bucle.
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.75\textwidth]{Invariantes_T_Tabla}
+			\caption{Invariantes de Transicion.}
+			\label{fig:mesh7}
+		\end{figure} 
+	\subsection{Politicas de Resolucion}
+	Para la resolucion de conflictos se aplicaron las siguientes politicas:
+	\begin{enumerate}
+		\item Prioridad llenado planta baja (piso 1) y luego habilitar el piso
+superior. Prioridad salida indistinta (caja).
+		\item Prioridad llenado indistinta. Prioridad salida a calle 2.
+	\end{enumerate}
 	\subsection{Sistema Monitor Usando Programacion Orientada a Objetos}
 	A continuacion mediante el uso de diagrams UML se describira como esta estructurado el sistema.
 		\subsubsection{Diagrama De Clases}
@@ -205,25 +233,26 @@ debe cumplir con las condiciones establecidas en el enunciado del problema.
 		\textbf{T-Invariantes} \newline
 		Para verificar los invariantes de transicion hay que ejecutar la simulacion una vez, 
 		para luego a partir del archivo resultante extraer y armar las secuencias de disparo.
-		Las secuencias se verifican a traves de un script python y mediante la libreria re el cual nos da acceso a las expresiones regulares. Lo primero es armar el patron para esto se uso una herramienta online llamada debuggex, en la figura \ref{fig:mesh4} observamos el resultado obtenido en la misma.		 
+		Las secuencias se verifican a traves de un script python y mediante la libreria re la cual nos da acceso a las expresiones regulares. Lo primero es armar el patron para esto se uso una herramienta online llamada debuggex, en la figura \ref{fig:mesh4} observamos el resultado obtenido en la misma.		 
 		\begin{figure}[H]
 			\centering
 			\includegraphics[width=0.75\textwidth]{debuggex}
 			\caption{Diagrama del patron.}
 			\label{fig:mesh4}
 		\end{figure}
+		El patron insertado en el script es:
+		\newline
+		$'((((T0)(.*?)(T3)(.*?))|((T1)(.*?)(T4)(.*?))|((T2)(.*?)(T5)(.*?)))(((T6)(.*?)(TB)(.*?)())|\\
+		((T7)(.*?)(TC)(.*?)))(((TD)(.*?)(TF))|((TE)(.*?)(TX))))|(((T8)(.*?)((T9)|(TA))))'$
 
-\section{Conclusion}
-	Tras la finalización del presente trabajo se puede llegar a las siguientes conclusiones.
-	Se aprendió las ventajas y desventajas de la programación concurrente. Algunas ventajas son la veloz ejecucion y tiempo de respuesta en un entorno multihilos, otra ventaja es la mejor utilizacion de las capacidades de los procesadore modernos. Algunas de las desventajas son la dificultad de debuggeo, ya que en un principio se presentaron problemas de exclusion mutua que no se cumplian al ingresar al recurso compartido.\newline
-	Tambien se puede destacar las ventajas de realizar simulaciones con Redes de Petri, siendo las principales:
-	\begin{itemize}
-		\item El respaldo matematico que nos provee ya que esta nos brinda capacidad de validación 
-		contra anomalias como son los bloqueos y fallas en la exclucion mutua.
-		\item Facilidad para modelar las características relevantes de los sistemas concurrente (Concurrencia, 
-		sincronización, bloqueos, etc.)
-		\item Análisis y animación mediante simuladores basados en evento discretos.
-	\end{itemize}
+\section{Conclusión}
+	Primero se diseñó la red de petri con la que se trabajaría. La misma sufrió varias transformaciones desde el inicio ya que se agregaron y removieron cosas en base a lo que se creía que modelaba la situación planteada de manera correcta.
+Una de las modificaciones realizadas está relacionada con el modelado de las prioridades en la red de petri, esta parte fue removida debido a que se decidió implementar la misma en código.
+Posteriormente se inició la interpretación de los diagramas de secuencia provistos.
+Una vez que se entendió la idea general se procedió a programar,cabe destacar que  se trato de seguir la nomenclatura de las clases, además de las clases necesarias se decidió agregar una clase Matriz la cual se encarga de manejar las operaciones básicas sobre matrices (sumar, multiplicar, obtener una fila en particular, etc.)
+Para administrar el sistema de prioridades y entrada salida del monitor se agregó la clase Cola, en la cual la cantidad de lugares disponibles depende de la cantidad de transiciones.
+ La Cola consiste en un arreglo de semáforos sin ningún permiso, de esta manera al intentar adquirir el permiso del semáforo el hilo queda bloqueado.
+También se agrego una clase administrador de archivo la cual se encarga de manejar las operaciones relacionadas con los archivos(creación, escritura, etc)
 	
 \section{Bibliografia}
 	\begin{itemize}
