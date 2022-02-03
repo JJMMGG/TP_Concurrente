@@ -9,8 +9,8 @@ public class Politicas {
     private static final int Transicion1 = 7;//T8
     private static final int TransicionP1 = 6;//T7
     private static final int Plaza2=16;//P17
-    private static final int Transicion2 = 14;//T15
-    private static final int TransicionP2 = 13;//T14
+    private static final int Transicion2 = 13;//T14
+    private static final int TransicionP2 = 14;//T15
     private int politica;
     static final int opcionIndiferente = 0;
     static final int opcionLLenadoPlantaBaja = 1;
@@ -37,13 +37,13 @@ public class Politicas {
                 case opcionLLenadoPlantaBaja:
                     if(aleatorio==Transicion1 && m.getDato(0,TransicionP1)==1){
                         aleatorio=TransicionP1;
-                        siguiente=1;//en teoria no hace falta
+                        siguiente = aleatorio;//en teoria no hace falta
                     }
                     break;
                 case opcionSalidaCalleDos:
                     if(aleatorio==Transicion2 && m.getDato(0,TransicionP2)==1){
                         aleatorio=TransicionP2;
-                        siguiente=1;
+                        siguiente = aleatorio;
                     }
                     break;
             }
