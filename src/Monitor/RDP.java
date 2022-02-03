@@ -21,6 +21,10 @@ public class RDP {
     private AdministradorArchivo archivo;
     private final int numeroTransiciones; //almacena el numero de transiciones "n".
     private final int numeroPlazas;       //almacena el numero de plazas "m".
+    private int autosPlantaBaja = 0;
+    private int autosPlantaAlta = 0;
+    private int autosCalle1 = 0;
+    private int autosCalle2 = 0;
     //m x n
     private Matriz IEntrada;//I-:pre
     private Matriz ISalida;//I+:post
@@ -352,5 +356,27 @@ public class RDP {
         archivo.EscribirEnArchivo(infoExtendido);
         String infoTransicion = "transicion : "+transicion+"\n";
         archivo.EscribirEnArchivo(infoTransicion);
+        int aux = VectorMarcadoActual.getDato(0,9);
+        String infoPrimerPiso = "piso 1 : "+ aux +"\n";
+        archivo.EscribirEnArchivo(infoPrimerPiso);
+        aux = VectorMarcadoActual.getDato(0,13);
+        String infoSegundoPiso = "piso 2 : "+ aux +"\n";
+        archivo.EscribirEnArchivo(infoSegundoPiso);
+        if(transicion == 6)
+            autosPlantaBaja++;
+        if(transicion == 7)
+            autosPlantaAlta++;
+        String totalAutosPrimerPiso = "Total piso 1 : "+ autosPlantaBaja +"\n";
+        archivo.EscribirEnArchivo(totalAutosPrimerPiso);
+        String totalAutosSegundoPiso = "Total piso 2 : "+ autosPlantaAlta +"\n";
+        archivo.EscribirEnArchivo(totalAutosSegundoPiso);
+        if(transicion == 13)
+            autosCalle1++;
+        if(transicion == 14)
+            autosCalle2++;
+        String totalAutosPrimerCalle = "Total calle 1 : "+ autosCalle1 +"\n";
+        archivo.EscribirEnArchivo(totalAutosPrimerCalle);
+        String totalAutosSegundaCalle = "Total calle 2 : "+ autosCalle2 +"\n";
+        archivo.EscribirEnArchivo(totalAutosSegundaCalle);
     }
 }
